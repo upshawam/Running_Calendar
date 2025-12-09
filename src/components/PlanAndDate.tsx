@@ -1,8 +1,7 @@
 import { DateControl } from "./DateControl";
 import PlanPicker from "./PlanPicker";
 import { PlanSummary, Units } from "types/app";
-import { WeekStartsOn } from "../ch/datecalc";
-import WeekStartsOnPicker from "./WeekStartsOnPicker";
+import { WeekStartsOn, WeekStartsOnValues } from "../ch/datecalc";
 import UnitsButtons from "./UnitsButtons";
 
 interface Props {
@@ -36,10 +35,23 @@ const PlanAndDate = ({
         planChangeHandler={selectedPlanChangeHandler}
       />
       <div className="controls-row" style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginTop: '0.5rem' }}>
-        <WeekStartsOnPicker
-          weekStartsOn={weekStartsOn}
-          changeHandler={weekStartsOnChangeHandler}
-        />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <h3 style={{ margin: 0 }}>Week starts on</h3>
+          <select className="select" value={weekStartsOn} onChange={(event) => {
+            const newValue = Number(event.target.value) as WeekStartsOn;
+            weekStartsOnChangeHandler(newValue);
+          }}>
+            <option key="monday" value={WeekStartsOnValues.Monday}>
+              Monday
+            </option>
+            <option key="sunday" value={WeekStartsOnValues.Sunday}>
+              Sunday
+            </option>
+            <option key="saturday" value={WeekStartsOnValues.Saturday}>
+              Saturday
+            </option>
+          </select>
+        </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <h3 style={{ margin: 0 }}>ending on</h3>
           <DateControl
