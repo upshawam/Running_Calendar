@@ -28,7 +28,7 @@ class PlanRepo {
   }
 
   find(planId: string): PlanSummary {
-    return this._byId[planId] ? this._byId[planId] : this._byId['pfitz_18_55']; // arbitrary choice
+    return this._byId[planId] ? this._byId[planId] : this._byId['c25k']; // default to a 5K plan
   }
 
   get first(): PlanSummary {
