@@ -57,41 +57,64 @@ const PlanPicker = ({
     }
   };
 
-  const groupedPlans = availablePlans.reduce((groups, plan) => {
-    const groupKey = plan.subcategory ? `${plan.coach} - ${plan.subcategory}` : plan.coach;
-    if (!groups[groupKey]) groups[groupKey] = [];
-    groups[groupKey].push(plan);
-    return groups;
-  }, {} as Record<string, PlanSummary[]>);
+  const categories = [
+    { label: "5K/10K Plans", types: ["5K", "10K", "15K/10M", "Base", "Multiple Distances"] },
+    { label: "Half Marathon Plans", types: ["Half Marathon"] },
+    { label: "Marathon Plans", types: ["Marathon"] }
+  ];
 
-  const planOptions = Object.keys(groupedPlans)
-    .sort((a, b) => {
-      const minDistA = Math.min(...groupedPlans[a].map(p => getDistance(p.type)));
-      const minDistB = Math.min(...groupedPlans[b].map(p => getDistance(p.type)));
-      return minDistA - minDistB;
-    })
-    .map(group => (
-      <optgroup key={group} label={group}>
-        {groupedPlans[group].sort((a, b) => {
-          const mileageA = getMileage(a.name);
-          const mileageB = getMileage(b.name);
-          if (mileageA !== mileageB) return mileageA - mileageB;
-          const distA = getDistance(a.type);
-          const distB = getDistance(b.type);
-          if (distA !== distB) return distA - distB;
-          return a.name.localeCompare(b.name);
-        }).map(plan => (
-          <option key={plan.id} value={plan.id}>
-            ({plan.type}) {plan.name}
-          </option>
-        ))}
-      </optgroup>
-    ));
+  const renderSelect = (category: { label: string; types: string[] }) => {
+    const categoryPlans = availablePlans.filter(p => category.types.includes(p.type));
+    const groupedPlans = categoryPlans.reduce((groups, plan) => {
+      const groupKey = plan.subcategory ? `${plan.coach} - ${plan.subcategory}` : plan.coach;
+      if (!groups[groupKey]) groups[groupKey] = [];
+      groups[groupKey].push(plan);
+      return groups;
+    }, {} as Record<string, PlanSummary[]>);
+
+    const planOptions = Object.keys(groupedPlans)
+      .sort((a, b) => {
+        const minDistA = Math.min(...groupedPlans[a].map(p => getDistance(p.type)));
+        const minDistB = Math.min(...groupedPlans[b].map(p => getDistance(p.type)));
+        return minDistA - minDistB;
+      })
+      .map(group => (
+        <optgroup key={group} label={group}>
+          {groupedPlans[group].sort((a, b) => {
+            const mileageA = getMileage(a.name);
+            const mileageB = getMileage(b.name);
+            if (mileageA !== mileageB) return mileageA - mileageB;
+            const distA = getDistance(a.type);
+            const distB = getDistance(b.type);
+            if (distA !== distB) return distA - distB;
+            return a.name.localeCompare(b.name);
+          }).map(plan => (
+            <option key={plan.id} value={plan.id}>
+              ({plan.type}) {plan.name}
+            </option>
+          ))}
+        </optgroup>
+      ));
+
+    return (
+      <div key={category.label} style={{ marginBottom: '1rem' }}>
+        <label>{category.label}</label>
+        <select
+          className="select"
+          value={categoryPlans.some(p => p.id === selectedPlan.id) ? selectedPlan.id : ""}
+          onChange={handleChange}
+        >
+          <option value="">Select a plan</option>
+          {planOptions}
+        </select>
+      </div>
+    );
+  };
 
   return (
-    <select className="select" value={selectedPlan.id} onChange={handleChange}>
-      {planOptions}
-    </select>
+    <div>
+      {categories.map(renderSelect)}
+    </div>
   );
 };
 
