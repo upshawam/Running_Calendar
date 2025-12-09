@@ -151,7 +151,13 @@ const PlanPicker = ({
             key={category.label}
             className="select"
             style={{ flex: '1', minWidth: '120px' }}
-            value={categoryPlans.some(p => p.id === selectedPlan.id) ? selectedPlan.id : ""}
+            value={
+              selectedPlan.id === "none"
+                ? ""
+                : categoryPlans.some(p => p.id === selectedPlan.id)
+                ? selectedPlan.id
+                : ""
+            }
             onChange={handleChange}
           >
             <option value="">{category.label}</option>

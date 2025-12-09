@@ -2,6 +2,7 @@ import { PlanSummary } from "types/app";
 
 // list of all current plans
 export const plans: PlanSummary[] = [
+  { id: "none", name: "Select a plan", type: "Marathon", coach: "None" },
   { id: "c25k", name: "Couch to 5K", type: "5K", coach: "Couch to 5K" },
   { id: "c25k_rbp", name: "Couch to 5K -- Runner's Blueprint", type: "5K", coach: "Couch to 5K" },
   { id: "frr_5k_01", name: "Faster Road Racing: 5K Schedule 1", type: "5K", coach: "Faster Road Racing" },
