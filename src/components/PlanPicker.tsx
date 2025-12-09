@@ -112,8 +112,53 @@ const PlanPicker = ({
   };
 
   return (
-    <div>
-      {categories.map(renderSelect)}
+    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+      {categories.map(category => {
+        const categoryPlans = availablePlans.filter(p => category.types.includes(p.type));
+        const groupedPlans = categoryPlans.reduce((groups, plan) => {
+          const groupKey = plan.subcategory ? `${plan.coach} - ${plan.subcategory}` : plan.coach;
+          if (!groups[groupKey]) groups[groupKey] = [];
+          groups[groupKey].push(plan);
+          return groups;
+        }, {} as Record<string, PlanSummary[]>);
+
+        const planOptions = Object.keys(groupedPlans)
+          .sort((a, b) => {
+            const minDistA = Math.min(...groupedPlans[a].map(p => getDistance(p.type)));
+            const minDistB = Math.min(...groupedPlans[b].map(p => getDistance(p.type)));
+            return minDistA - minDistB;
+          })
+          .map(group => (
+            <optgroup key={group} label={group}>
+              {groupedPlans[group].sort((a, b) => {
+                const mileageA = getMileage(a.name);
+                const mileageB = getMileage(b.name);
+                if (mileageA !== mileageB) return mileageA - mileageB;
+                const distA = getDistance(a.type);
+                const distB = getDistance(b.type);
+                if (distA !== distB) return distA - distB;
+                return a.name.localeCompare(b.name);
+              }).map(plan => (
+                <option key={plan.id} value={plan.id}>
+                  ({plan.type}) {plan.name}
+                </option>
+              ))}
+            </optgroup>
+          ));
+
+        return (
+          <select
+            key={category.label}
+            className="select"
+            style={{ flex: '1', minWidth: '120px' }}
+            value={categoryPlans.some(p => p.id === selectedPlan.id) ? selectedPlan.id : ""}
+            onChange={handleChange}
+          >
+            <option value="">{category.label}</option>
+            {planOptions}
+          </select>
+        );
+      })}
     </div>
   );
 };
