@@ -94,17 +94,42 @@ const PacesPanel: React.FC<PacesPanelProps> = ({ className = "" }) => {
       top: "0",
       zIndex: 100
     }}>
-      <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1rem" }}>
-        <h3 style={{ margin: 0 }}>Training Paces</h3>
-        <select
-          className="select"
-          value={selectedUser}
-          onChange={(e) => setSelectedUser(e.target.value as "aaron" | "kristin")}
-          style={{ fontSize: "14px", padding: "0.3em 0.6em" }}
-        >
-          <option value="aaron">Aaron</option>
-          <option value="kristin">Kristin</option>
-        </select>
+      <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "0.5rem" }}>
+        <h3 style={{ margin: 0, fontSize: "1.1rem" }}>Training Paces</h3>
+        <div style={{ display: "flex", gap: "0.5rem" }}>
+          <button
+            onClick={() => setSelectedUser("aaron")}
+            style={{
+              padding: "0.4rem 0.8rem",
+              fontSize: "0.9rem",
+              fontWeight: selectedUser === "aaron" ? "bold" : "normal",
+              backgroundColor: selectedUser === "aaron" ? "var(--secondary-color)" : "transparent",
+              color: "var(--text-color)",
+              border: "2px solid var(--secondary-color)",
+              borderRadius: "0.25rem",
+              cursor: "pointer",
+              transition: "all 0.2s"
+            }}
+          >
+            Aaron
+          </button>
+          <button
+            onClick={() => setSelectedUser("kristin")}
+            style={{
+              padding: "0.4rem 0.8rem",
+              fontSize: "0.9rem",
+              fontWeight: selectedUser === "kristin" ? "bold" : "normal",
+              backgroundColor: selectedUser === "kristin" ? "var(--secondary-color)" : "transparent",
+              color: "var(--text-color)",
+              border: "2px solid var(--secondary-color)",
+              borderRadius: "0.25rem",
+              cursor: "pointer",
+              transition: "all 0.2s"
+            }}
+          >
+            Kristin
+          </button>
+        </div>
       </div>
 
       {loading && (
