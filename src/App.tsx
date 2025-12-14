@@ -34,6 +34,7 @@ const App = () => {
   const [currentUser, setCurrentUser] = useState<"aaron" | "kristin">(
     (storageService.getCurrentUser() as "aaron" | "kristin") || "aaron"
   );
+  const [isInitialized, setIsInitialized] = useState(false);
   const [selectedUnits, setSelectedUnits] = useState<Units>(
     u === "mi" || u === "km" ? u : getLocaleUnits(),
   );
@@ -61,9 +62,10 @@ const App = () => {
       setRacePlan(savedState.racePlan);
       setUndoHistory(savedState.undoHistory || []);
     } else {
-      // Load normally
+      // Load normally - this is async, so we need to wrap it
       initialLoad(selectedPlan, planEndDate, selectedUnits, weekStartsOn);
     }
+    setIsInitialized(true);
   });
 
   const [, forceUpdate] = React.useReducer((x) => x + 1, 0);
@@ -256,7 +258,7 @@ const App = () => {
         />
       </div>
       <div className="main-ui">
-        {racePlan && (
+        {isInitialized && racePlan && (
           <CalendarGrid
             racePlan={racePlan}
             units={selectedUnits}
