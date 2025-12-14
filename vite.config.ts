@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [react()],
   base: "/Running_Calendar/",
   build: {
-    outDir: 'docs'
+    outDir: 'docs',
+    emptyOutDir: false
   }
 })
