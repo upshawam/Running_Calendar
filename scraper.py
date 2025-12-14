@@ -146,7 +146,7 @@ def auto_login(storage_path, username, password, debug=False):
         finally:
             browser.close()
 
-def fetch_data(storage_path, user, output_dir="public/data", debug=False):
+def fetch_data(storage_path, user, output_dir="docs/data", debug=False):
     """Fetch training data using saved storage state."""
     # Force headless mode in CI environments
     import os
@@ -348,7 +348,7 @@ if __name__ == "__main__":
     fetch_parser = subparsers.add_parser('fetch', help='Fetch data using saved storage state')
     fetch_parser.add_argument('--storage', required=True, help='Path to load storage state')
     fetch_parser.add_argument('--user', required=True, help='User identifier (aaron or kristin)')
-    fetch_parser.add_argument('--output-dir', default='public/data', help='Output directory for JSON files')
+    fetch_parser.add_argument('--output-dir', default='docs/data', help='Output directory for JSON files')
     fetch_parser.add_argument('--debug', action='store_true', help='Enable debug mode')
 
     args = parser.parse_args()

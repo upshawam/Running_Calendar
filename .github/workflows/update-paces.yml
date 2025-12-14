@@ -77,10 +77,10 @@ jobs:
       env:
         PYTHONUNBUFFERED: 1
       run: |
-        mkdir -p public/data
-        python3 scraper.py fetch --storage tmp/storage_kristin.json --user kristin --output-dir public/data || echo "kristin fetch failed"
-        python3 scraper.py fetch --storage tmp/storage_aaron.json   --user aaron   --output-dir public/data || echo "aaron fetch failed"
-        ls -la public/data || true
+        mkdir -p docs/data
+        python3 scraper.py fetch --storage tmp/storage_kristin.json --user kristin --output-dir docs/data || echo "kristin fetch failed"
+        python3 scraper.py fetch --storage tmp/storage_aaron.json   --user aaron   --output-dir docs/data || echo "aaron fetch failed"
+        ls -la docs/data || true
 
     - name: Commit and push changes
       env:
@@ -89,6 +89,6 @@ jobs:
       run: |
         git config user.name "${GIT_COMMITTER_NAME}"
         git config user.email "${GIT_COMMITTER_EMAIL}"
-        git add public/data || true
+        git add docs/data || true
         git commit -m "Update training paces data [automated]" || echo "No changes to commit"
         git push origin HEAD:main
