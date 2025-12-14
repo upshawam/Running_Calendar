@@ -12,9 +12,10 @@ interface PacesHistory {
 
 interface PacesPanelProps {
   className?: string;
+  onUserChange?: (user: "aaron" | "kristin") => void;
 }
 
-const PacesPanel: React.FC<PacesPanelProps> = ({ className = "" }) => {
+const PacesPanel: React.FC<PacesPanelProps> = ({ className = "", onUserChange }) => {
   const [selectedUser, setSelectedUser] = useState<"aaron" | "kristin">("aaron");
   const [pacesData, setPacesData] = useState<PaceData | null>(null);
   const [loading, setLoading] = useState(false);
@@ -23,6 +24,13 @@ const PacesPanel: React.FC<PacesPanelProps> = ({ className = "" }) => {
   useEffect(() => {
     loadPacesData(selectedUser);
   }, [selectedUser]);
+
+  const handleUserClick = (user: "aaron" | "kristin") => {
+    setSelectedUser(user);
+    if (onUserChange) {
+      onUserChange(user);
+    }
+  };
 
   const loadPacesData = async (user: "aaron" | "kristin") => {
     setLoading(true);
@@ -98,7 +106,7 @@ const PacesPanel: React.FC<PacesPanelProps> = ({ className = "" }) => {
         <h3 style={{ margin: 0, fontSize: "1.1rem" }}>Training Paces</h3>
         <div style={{ display: "flex", gap: "0.5rem" }}>
           <button
-            onClick={() => setSelectedUser("aaron")}
+            onClick={() => handleUserClick("aaron")}
             style={{
               padding: "0.4rem 0.8rem",
               fontSize: "0.9rem",
@@ -114,7 +122,7 @@ const PacesPanel: React.FC<PacesPanelProps> = ({ className = "" }) => {
             Aaron
           </button>
           <button
-            onClick={() => setSelectedUser("kristin")}
+            onClick={() => handleUserClick("kristin")}
             style={{
               padding: "0.4rem 0.8rem",
               fontSize: "0.9rem",
