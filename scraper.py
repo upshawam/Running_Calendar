@@ -1,5 +1,6 @@
 import json
 import os
+import argparse
 from playwright.sync_api import sync_playwright
 
 def auto_login(page, username, password):
@@ -177,3 +178,29 @@ def fetch_vo2(username, password, output_dir="data"):
             return vo2
         finally:
             browser.close()
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Scrape training data from Runalyze")
+    parser.add_argument("--username", required=True, help="Runalyze username")
+    parser.add_argument("--password", required=True, help="Runalyze password")
+    parser.add_argument("--user", required=True, help="User identifier (aaron or kristin)")
+    parser.add_argument("--output-dir", default="public/data", help="Output directory for JSON files")
+
+    args = parser.parse_args()
+
+    # Ensure output directory exists
+    os.makedirs(args.output_dir, exist_ok=True)
+
+    print(f"Fetching training paces for {args.user}...")
+    paces = fetch_training_paces(args.username, args.password, args.output_dir)
+    print(f"Found {len(paces)} pace entries")
+
+    print(f"Fetching prognosis for {args.user}...")
+    prognosis = fetch_prognosis(args.username, args.password, args.output_dir)
+    print(f"Found {len(prognosis)} prognosis entries")
+
+    print(f"Fetching VO2 max for {args.user}...")
+    vo2 = fetch_vo2(args.username, args.password, args.output_dir)
+    print(f"Found {len(vo2)} VO2 entries")
+
+    print("Scraping complete!")

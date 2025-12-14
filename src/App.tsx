@@ -9,6 +9,7 @@ import { toCsv } from "./ch/csvService";
 import { download } from "./ch/downloadservice";
 import PlanAndDate from "./components/PlanAndDate";
 import UndoButton from "./components/UndoButton";
+import PacesPanel from "./components/PacesPanel";
 import history from "./defy/history";
 import {
   useQueryParams,
@@ -166,6 +167,7 @@ const App = () => {
         unitsChangeHandler={onSelectedUnitsChanged}
       />
       <PlanDetailsCard racePlan={racePlan} />
+      <PacesPanel />
       <div className="second-toolbar">
         <button className="app-button" onClick={downloadIcalHandler}>Download iCal</button>
         <button className="app-button" onClick={downloadCsvHandler}>Download CSV</button>
