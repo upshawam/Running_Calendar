@@ -23,6 +23,13 @@ const PacesPanel: React.FC<PacesPanelProps> = ({ className = "", onUserChange })
 
   useEffect(() => {
     loadPacesData(selectedUser);
+    
+    // Refresh paces data every 30 minutes in case workflow updated them
+    const refreshInterval = setInterval(() => {
+      loadPacesData(selectedUser);
+    }, 30 * 60 * 1000); // 30 minutes
+
+    return () => clearInterval(refreshInterval);
   }, [selectedUser]);
 
   const handleUserClick = (user: "aaron" | "kristin") => {
@@ -37,7 +44,9 @@ const PacesPanel: React.FC<PacesPanelProps> = ({ className = "", onUserChange })
     setError(null);
 
     try {
-      const response = await fetch(`${import.meta.env.BASE_URL}data/${user}_paces.json`);
+      // Add cache-busting query param to always fetch fresh data
+      const cacheKey = new Date().toISOString().split('T')[0]; // Changes daily
+      const response = await fetch(`${import.meta.env.BASE_URL}data/${user}_paces.json?v=${cacheKey}`);
       if (!response.ok) {
         throw new Error(`Failed to load paces for ${user}`);
       }
