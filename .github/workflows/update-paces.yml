@@ -28,7 +28,7 @@ jobs:
       run: playwright install chromium
 
     - name: Create data directory
-      run: mkdir -p data
+      run: mkdir -p public/data
 
     - name: Run scraper for Aaron
       env:
@@ -60,6 +60,6 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add data/
+        git add public/data/
         git commit -m "Update training paces data [automated]"
         git push
