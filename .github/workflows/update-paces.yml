@@ -34,15 +34,17 @@ jobs:
       env:
         RUNALYZE_USERNAME: ${{ secrets.AARON_RUNALYZE_USERNAME }}
         RUNALYZE_PASSWORD: ${{ secrets.AARON_RUNALYZE_PASSWORD }}
+        DEBUG: true
       run: |
-        python3 scraper.py --username "$RUNALYZE_USERNAME" --password "$RUNALYZE_PASSWORD" --user aaron --output-dir public/data
+        python3 scraper.py --username "$RUNALYZE_USERNAME" --password "$RUNALYZE_PASSWORD" --user aaron --output-dir public/data --debug
 
     - name: Run scraper for Kristin
       env:
         RUNALYZE_USERNAME: ${{ secrets.KRISTIN_RUNALYZE_USERNAME }}
         RUNALYZE_PASSWORD: ${{ secrets.KRISTIN_RUNALYZE_PASSWORD }}
+        DEBUG: true
       run: |
-        python3 scraper.py --username "$RUNALYZE_USERNAME" --password "$RUNALYZE_PASSWORD" --user kristin --output-dir public/data
+        python3 scraper.py --username "$RUNALYZE_USERNAME" --password "$RUNALYZE_PASSWORD" --user kristin --output-dir public/data --debug
 
     - name: Check for changes
       id: verify-changed-files
