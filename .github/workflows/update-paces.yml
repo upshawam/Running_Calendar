@@ -79,13 +79,25 @@ jobs:
       run: |
         mkdir -p docs/data
         echo "Fetching paces for kristin..."
-        python3 scraper.py fetch --storage tmp/storage_kristin.json --user kristin --output-dir docs/data || echo "kristin fetch failed"
+        python3 scraper.py fetch --storage tmp/storage_kristin.json --user kristin --output-dir docs/data || exit 1
         echo "Fetching paces for aaron..."
-        python3 scraper.py fetch --storage tmp/storage_aaron.json   --user aaron   --output-dir docs/data || echo "aaron fetch failed"
+        python3 scraper.py fetch --storage tmp/storage_aaron.json   --user aaron   --output-dir docs/data || exit 1
         echo "Files in docs/data:"
         ls -la docs/data || true
         echo "Content of aaron_paces.json:"
         cat docs/data/aaron_paces.json | head -20 || true
+        
+        # Verify we have new entries (file should have more than just the old entry)
+        echo "Verifying paces were updated..."
+        python3 -c "
+        import json
+        with open('docs/data/aaron_paces.json') as f:
+            data = json.load(f)
+        if len(data) < 2:
+            print('ERROR: No new paces entry was added!')
+            exit(1)
+        print(f'SUCCESS: Found {len(data)} entries in aaron_paces.json')
+        "
 
     - name: Commit and push changes
       env:
