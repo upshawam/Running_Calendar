@@ -51,80 +51,22 @@ const App = () => {
   );
 
   useMountEffect(() => {
-    const initializeApp = async () => {
-      // Try to load saved state for the current user first
-      const savedState = storageService.loadCalendarState(currentUser);
-      if (savedState && savedState.racePlan && savedState.racePlan.dateGrid && savedState.racePlan.dateGrid.weeks) {
-        // Restore from saved state - validate structure
-        const plan = savedState.selectedPlan || repo.find(p || "");
-        const endDate = savedState.planEndDate || addWeeks(endOfWeek(new Date(), { weekStartsOn: weekStartsOn }), 20);
-        const units = savedState.selectedUnits || (u === "mi" || u === "km" ? u : getLocaleUnits());
-        const weekStart = savedState.weekStartsOn || (s === 0 || s === 1 || s === 6 ? s : WeekStartsOnValues.Monday);
-        
-        setSelectedPlan(plan);
-        setPlanEndDate(endDate);
-        setSelectedUnits(units);
-        setWeekStartsOn(weekStart);
-        setRacePlan(savedState.racePlan);
-        setUndoHistory(savedState.undoHistory || []);
-      } else {
-        // Load normally - this is async, so we need to await it
-        await initialLoad(selectedPlan, planEndDate, selectedUnits, weekStartsOn);
-      }
-    };
-    
-    initializeApp();
+    // Try to load saved state for the current user first
+    const savedState = storageService.loadCalendarState(currentUser);
+    if (savedState && savedState.racePlan) {
+      // Restore from saved state
+      setSelectedPlan(savedState.selectedPlan || repo.find(p || ""));
+      setPlanEndDate(savedState.planEndDate || addWeeks(endOfWeek(new Date(), { weekStartsOn: weekStartsOn }), 20));
+      setSelectedUnits(savedState.selectedUnits || (u === "mi" || u === "km" ? u : getLocaleUnits()));
+      setWeekStartsOn(savedState.weekStartsOn || (s === 0 || s === 1 || s === 6 ? s : WeekStartsOnValues.Monday));
+      setRacePlan(savedState.racePlan);
+      setUndoHistory(savedState.undoHistory || []);
+    } else {
+      // Load normally - this is async, so we need to wrap it
+      initialLoad(selectedPlan, planEndDate, selectedUnits, weekStartsOn);
+    }
+    setIsInitialized(true);
   });
-
-  // Load user's saved state when currentUser changes (via PacesPanel button click)
-  React.useEffect(() => {
-    const loadUserState = async () => {
-      const savedState = storageService.loadCalendarState(currentUser);
-      if (savedState && savedState.racePlan && savedState.racePlan.dateGrid && savedState.racePlan.dateGrid.weeks) {
-        const plan = savedState.selectedPlan || repo.find("");
-        const endDate = savedState.planEndDate || addWeeks(endOfWeek(new Date(), { weekStartsOn: WeekStartsOnValues.Monday }), 20);
-        const units = savedState.selectedUnits || getLocaleUnits();
-        const weekStart = savedState.weekStartsOn || WeekStartsOnValues.Monday;
-        
-        setSelectedPlan(plan);
-        setPlanEndDate(endDate);
-        setSelectedUnits(units);
-        setWeekStartsOn(weekStart);
-        setRacePlan(savedState.racePlan);
-        setUndoHistory(savedState.undoHistory || []);
-        // Update URL params with the restored state
-        setq(getParams(units, plan, endDate, weekStart));
-      } else {
-        // Initialize with default state
-        const newPlan = repo.find("");
-        const newEndDate = addWeeks(endOfWeek(new Date(), { weekStartsOn: WeekStartsOnValues.Monday }), 20);
-        const newUnits = getLocaleUnits();
-        const newWeekStartsOn = WeekStartsOnValues.Monday;
-        
-        const builtPlan = build(await repo.fetch(newPlan), newEndDate, newWeekStartsOn);
-        setSelectedPlan(newPlan);
-        setPlanEndDate(newEndDate);
-        setSelectedUnits(newUnits);
-        setWeekStartsOn(newWeekStartsOn);
-        setRacePlan(builtPlan);
-        setUndoHistory([builtPlan]);
-        setq(getParams(newUnits, newPlan, newEndDate, newWeekStartsOn));
-        saveState(newPlan, newEndDate, newUnits, newWeekStartsOn, builtPlan, [builtPlan]);
-      }
-    };
-    
-    // Only load if not the initial mount (isInitialized will be false on mount)
-    if (isInitialized) {
-      loadUserState();
-    }
-  }, [currentUser]);
-
-  // Set initialized when racePlan is loaded
-  React.useEffect(() => {
-    if (racePlan && racePlan.dateGrid && racePlan.dateGrid.weeks) {
-      setIsInitialized(true);
-    }
-  }, [racePlan]);
 
   const [, forceUpdate] = React.useReducer((x) => x + 1, 0);
   React.useEffect(() => {
@@ -261,10 +203,35 @@ const App = () => {
     saveState(selectedPlan, planEndDate, selectedUnits, weekStartsOn, newPlan, undoHistory);
   }
 
-  const handleUserChange = (user: "aaron" | "kristin") => {
+  const handleUserChange = async (user: "aaron" | "kristin") => {
     setCurrentUser(user);
     storageService.setCurrentUser(user);
-    setIsInitialized(false); // Reset initialization flag when switching users
+    
+    // Try to load saved state for the new user
+    const savedState = storageService.loadCalendarState(user);
+    if (savedState && savedState.racePlan) {
+      setSelectedPlan(savedState.selectedPlan || repo.find(""));
+      setPlanEndDate(savedState.planEndDate || addWeeks(endOfWeek(new Date(), { weekStartsOn: weekStartsOn }), 20));
+      setSelectedUnits(savedState.selectedUnits || getLocaleUnits());
+      setWeekStartsOn(savedState.weekStartsOn || WeekStartsOnValues.Monday);
+      setRacePlan(savedState.racePlan);
+      setUndoHistory(savedState.undoHistory || []);
+    } else {
+      // Initialize with default state
+      const newPlan = repo.find("");
+      const newEndDate = addWeeks(endOfWeek(new Date(), { weekStartsOn: WeekStartsOnValues.Monday }), 20);
+      const newUnits = getLocaleUnits();
+      const newWeekStartsOn = WeekStartsOnValues.Monday;
+      
+      const builtPlan = build(await repo.fetch(newPlan), newEndDate, newWeekStartsOn);
+      setSelectedPlan(newPlan);
+      setPlanEndDate(newEndDate);
+      setSelectedUnits(newUnits);
+      setWeekStartsOn(newWeekStartsOn);
+      setRacePlan(builtPlan);
+      setUndoHistory([builtPlan]);
+      saveState(newPlan, newEndDate, newUnits, newWeekStartsOn, builtPlan, [builtPlan]);
+    }
   };
 
   return (
