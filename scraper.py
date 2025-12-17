@@ -173,7 +173,7 @@ def fetch_data(storage_path, user, output_dir="docs/data", debug=False):
         try:
             # Fetch training paces
             print("Fetching training paces...")
-            page.goto("https://runalyze.com/athlete/training-paces", wait_until="domcontentloaded")
+            page.goto("https://runalyze.com/dashboard", wait_until="domcontentloaded")
             page.wait_for_load_state("networkidle", timeout=30000)
 
             # Wait for the panel to load - try multiple selectors
