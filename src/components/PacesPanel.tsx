@@ -145,15 +145,19 @@ const PacesPanel: React.FC<PacesPanelProps> = ({ className = "" }) => {
           }}>
             updated: {(() => {
               const date = new Date(lastUpdated);
-              const formatter = new Intl.DateTimeFormat('en-US', {
-                timeZone: 'America/Chicago',
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: true
-              });
-              return formatter.format(date);
+              const now = new Date();
+              const diffMs = now.getTime() - date.getTime();
+              const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+              const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+              
+              if (diffHours < 1) {
+                return `${diffMins} min${diffMins !== 1 ? 's' : ''} ago`;
+              } else if (diffHours < 24) {
+                return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
+              } else {
+                const diffDays = Math.floor(diffHours / 24);
+                return `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
+              }
             })()}
           </div>
         )}
