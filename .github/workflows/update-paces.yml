@@ -58,19 +58,19 @@ jobs:
         [ -n "$USERNAME" ] && [ -n "$PASSWORD" ] && python3 scraper.py auto-login --storage tmp/storage_aaron.json --username "$USERNAME" --password "$PASSWORD"
 
     - name: Fetch training paces
-      run: |
-        mkdir -p docs/data
-        python3 scraper.py fetch --storage tmp/storage_kristin.json --user kristin --output-dir docs/data || exit 1
-        python3 scraper.py fetch --storage tmp/storage_aaron.json --user aaron --output-dir docs/data || exit 1
+        run: |
+        mkdir -p public/data
+        python3 scraper.py fetch --storage tmp/storage_kristin.json --user kristin --output-dir public/data || exit 1
+        python3 scraper.py fetch --storage tmp/storage_aaron.json --user aaron --output-dir public/data || exit 1
         
         # Verify paces were added
         python3 -c "
         import json
-        with open('docs/data/aaron_paces.json') as f:
-            data = json.load(f)
+        with open('public/data/aaron_paces.json') as f:
+          data = json.load(f)
         if len(data) < 2:
-            print('ERROR: No new paces entry was added!')
-            exit(1)
+          print('ERROR: No new paces entry was added!')
+          exit(1)
         print(f'✓ Successfully saved paces with {len(data)} total entries')
         "
 
@@ -81,18 +81,8 @@ jobs:
       run: |
         git config user.name "${GIT_COMMITTER_NAME}"
         git config user.email "${GIT_COMMITTER_EMAIL}"
-        git add docs/data || true
+        git add public/data || true
+        git diff --cached public/data || true
         git commit -m "Update training paces data [automated]" || echo "No changes to commit"
         git push origin HEAD:master
 
-    - name: Commit and push changes
-      env:
-        GIT_COMMITTER_NAME: "github-actions[bot]"
-        GIT_COMMITTER_EMAIL: "41898282+github-actions[bot]@users.noreply.github.com"
-      run: |
-        git config user.name "${GIT_COMMITTER_NAME}"
-        git config user.email "${GIT_COMMITTER_EMAIL}"
-        git add docs/data || true
-        git diff --cached docs/data || true
-        git commit -m "Update training paces data [automated]" || echo "No changes to commit"
-        git push origin HEAD:master
