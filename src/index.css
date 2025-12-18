@@ -522,6 +522,25 @@ svg.drag-handle {
   height: 100%;
 }
 
+.current-day {
+  position: relative;
+  box-shadow: 0 0 0 3px #FF6FDF;
+  border-radius: 0.25rem;
+}
+
+.current-day::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 215, 0, 0.15);
+  border-radius: 0.25rem;
+  pointer-events: none;
+  z-index: 1;
+}
+
 .dateline {
   text-align: center;
   background-color: var(--primary-color);

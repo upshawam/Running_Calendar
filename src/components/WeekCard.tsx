@@ -1,5 +1,6 @@
+import * as React from "react";
 import { RacePlan, key } from "../ch/dategrid";
-import { format } from "date-fns";
+import { format, isSameDay, startOfDay } from "date-fns";
 import { DayCell } from "./DayCell";
 import { Week, DayDetails, Units, dayOfWeek } from "types/app";
 
@@ -24,9 +25,11 @@ export const WeekCard = ({
   selectedWeek,
   hoveringWeek,
 }: Props) => {
+  const today = React.useMemo(() => startOfDay(new Date()), []);
+  
   return (
     <div>
-      {week.days.map((d, _) => (
+      {week.days.map((d) => (
         <div>
           <DayCell
             key={key(d.date)}
@@ -42,6 +45,7 @@ export const WeekCard = ({
               hoveringDow === format(d.date, "EEEE") ||
               hoveringWeek === week.weekNum
             }
+            isToday={isSameDay(startOfDay(d.date), today)}
           />
         </div>
       ))}
