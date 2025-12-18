@@ -522,6 +522,11 @@ svg.drag-handle {
   height: 100%;
 }
 
+.day-cell.current-day {
+  box-shadow: 0 0 0 3px var(--focus-color);
+  border-radius: 0.25rem;
+}
+
 .dateline {
   text-align: center;
   background-color: var(--primary-color);

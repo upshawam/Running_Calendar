@@ -3,7 +3,7 @@ import { RacePlan, key } from "../ch/dategrid";
 import { DayCell } from "./DayCell";
 import { WeekSummary } from "./WeekSummary";
 import { DayOfWeekHeader } from "./DayOfWeekHeader";
-import { format } from "date-fns";
+import { format, isWithinInterval, isSameDay, startOfDay } from "date-fns";
 import { getDaysHeader, WeekStartsOn } from "../ch/datecalc";
 import { Units, dayOfWeek, Week, DayDetails } from "types/app";
 
@@ -75,6 +75,30 @@ export const CalendarGrid = ({
     undefined,
   );
   const maxDistance = findMaxDistance(racePlan.dateGrid.weeks);
+  const currentWeekRef = React.useRef<HTMLDivElement>(null);
+  const today = startOfDay(new Date());
+
+  // Find the week containing today's date
+  const currentWeekIndex = React.useMemo(() => {
+    return racePlan.dateGrid.weeks.findIndex((w) =>
+      w.days.some((d) => 
+        isWithinInterval(today, { 
+          start: startOfDay(d.date), 
+          end: startOfDay(d.date) 
+        })
+      )
+    );
+  }, [racePlan.dateGrid.weeks, today]);
+
+  // Scroll to current week on mount or when racePlan changes
+  React.useEffect(() => {
+    if (currentWeekRef.current && currentWeekIndex >= 0) {
+      currentWeekRef.current.scrollIntoView({ 
+        behavior: "smooth", 
+        block: "center" 
+      });
+    }
+  }, [currentWeekIndex]);
 
   function getWeek(w: Week<DayDetails>) {
     const weekDist = calcWeeklyDistance(w);
@@ -91,8 +115,14 @@ export const CalendarGrid = ({
       }
   }
   
+    const isCurrentWeek = w.weekNum === currentWeekIndex;
+    
     return (
-      <div className="week-grid" key={`wr:${w.weekNum}`}>
+      <div 
+        className="week-grid" 
+        key={`wr:${w.weekNum}`}
+        ref={isCurrentWeek ? currentWeekRef : null}
+      >
         <WeekSummary
           key={`ws:${w.weekNum}`}
           desc={w.desc}
@@ -103,7 +133,7 @@ export const CalendarGrid = ({
           isLastWeek={w.weekNum === racePlan.dateGrid.weekCount - 1}
           isHighestMileage={isHighestMileage}
         />
-        {w.days.map((d, _) => (
+        {w.days.map((d) => (
           <DayCell
             key={key(d.date)}
             date={d.date}
@@ -112,6 +142,7 @@ export const CalendarGrid = ({
             dayDetails={d.event}
             selected={selectedDow === format(d.date, "EEEE")}
             hovering={hoveringDow === format(d.date, "EEEE")}
+            isToday={isSameDay(d.date, today)}
           />
         ))}
       </div>
@@ -122,7 +153,7 @@ export const CalendarGrid = ({
     return (
       <div className="week-grid">
         <div key={"blank-left"} />
-        {getDaysHeader(weekStartsOn).map((dow, _) => (
+        {getDaysHeader(weekStartsOn).map((dow) => (
           <DayOfWeekHeader
             key={dow}
             dow={dow as dayOfWeek}
@@ -138,7 +169,7 @@ export const CalendarGrid = ({
   return (
     <div className="calendar-grid">
       {getHeader()}
-      {racePlan.dateGrid.weeks.map((w, _) => getWeek(w))}
+      {racePlan.dateGrid.weeks.map((w) => getWeek(w))}
     </div>
   );
 };
