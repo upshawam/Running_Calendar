@@ -76,13 +76,15 @@ export const CalendarGrid = ({
   );
   const maxDistance = findMaxDistance(racePlan.dateGrid.weeks);
   
+  // Calculate today's date once
+  const today = React.useMemo(() => startOfDay(new Date()), []);
+  
   // Find the current week index
   const currentWeekIndex = React.useMemo(() => {
-    const today = startOfDay(new Date());
     return racePlan.dateGrid.weeks.findIndex((week) =>
       week.days.some((day) => isSameDay(startOfDay(day.date), today))
     );
-  }, [racePlan.dateGrid.weeks]);
+  }, [racePlan.dateGrid.weeks, today]);
 
   // Create a ref for the current week
   const currentWeekRef = React.useRef<HTMLDivElement>(null);
@@ -113,7 +115,6 @@ export const CalendarGrid = ({
   }
   
     const isCurrentWeek = weekIndex === currentWeekIndex;
-    const today = startOfDay(new Date());
     
     return (
       <div 
