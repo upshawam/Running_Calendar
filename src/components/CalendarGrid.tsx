@@ -3,7 +3,7 @@ import { RacePlan, key } from "../ch/dategrid";
 import { DayCell } from "./DayCell";
 import { WeekSummary } from "./WeekSummary";
 import { DayOfWeekHeader } from "./DayOfWeekHeader";
-import { format } from "date-fns";
+import { format, isSameDay } from "date-fns";
 import { getDaysHeader, WeekStartsOn } from "../ch/datecalc";
 import { Units, dayOfWeek, Week, DayDetails } from "types/app";
 
@@ -60,7 +60,6 @@ function findMaxDistance(weeks: Week<DayDetails>[]): number[] {
   return hasRanges ? [maxOfMins, maxOfMaxes] : [maxOfMaxes];
 }
 
-
 export const CalendarGrid = ({
   racePlan,
   units,
@@ -68,6 +67,8 @@ export const CalendarGrid = ({
   swapDates,
   swapDow,
 }: Props) => {
+  const today = new Date();
+  const todayCellRef = React.useRef<HTMLDivElement | null>(null);
   const [selectedDow, setSelectedDow] = React.useState<dayOfWeek | undefined>(
     undefined,
   );
@@ -103,20 +104,32 @@ export const CalendarGrid = ({
           isLastWeek={w.weekNum === racePlan.dateGrid.weekCount - 1}
           isHighestMileage={isHighestMileage}
         />
-        {w.days.map((d, _) => (
-          <DayCell
-            key={key(d.date)}
-            date={d.date}
-            units={units}
-            swap={swapDates}
-            dayDetails={d.event}
-            selected={selectedDow === format(d.date, "EEEE")}
-            hovering={hoveringDow === format(d.date, "EEEE")}
-          />
-        ))}
+        {w.days.map((d, _) => {
+          const isToday = isSameDay(d.date, today);
+          return (
+            <DayCell
+              key={key(d.date)}
+              date={d.date}
+              units={units}
+              swap={swapDates}
+              dayDetails={d.event}
+              selected={selectedDow === format(d.date, "EEEE")}
+              hovering={hoveringDow === format(d.date, "EEEE")}
+              isToday={isToday}
+              todayRef={isToday ? todayCellRef : undefined}
+            />
+          );
+        })}
       </div>
-    );  
+    );
   }
+
+  // Scroll to today cell on mount/update
+  React.useEffect(() => {
+    if (todayCellRef.current) {
+      todayCellRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [racePlan]);
 
   function getHeader() {
     return (

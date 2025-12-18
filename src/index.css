@@ -1,3 +1,10 @@
+/* Highlight for today cell */
+.day-cell.today-highlight {
+  outline: 3px solid #FFD700;
+  box-shadow: 0 0 12px 4px #FFD70099, 0 0 0 2px #fff inset;
+  border-radius: 8px;
+  z-index: 2;
+}
 :root {
   --app-bg-color: #677c96;
   --focus-color: #FF6FDF;

@@ -13,6 +13,7 @@ interface Props {
   isFirstWeek: boolean;
   isLastWeek: boolean;
   isHighestMileage: boolean;
+  // removed isCurrentWeek
 }
 
 export const WeekSummary = ({

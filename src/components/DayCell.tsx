@@ -12,6 +12,8 @@ interface Props {
   swap: (d1: Date, d2: Date) => void;
   selected: boolean;
   hovering: boolean;
+  isToday?: boolean;
+  todayRef?: React.RefObject<HTMLDivElement>;
 }
 
 export const DayCell = ({
@@ -21,6 +23,8 @@ export const DayCell = ({
   swap,
   selected,
   hovering,
+  isToday,
+  todayRef,
 }: Props) => {
 
   function canSwap(droppedDate: Date) {
@@ -49,7 +53,13 @@ export const DayCell = ({
         height: "100%",
       }}
     >
-      <div className="day-cell" ref={drop}>
+      <div
+        className={`day-cell${isToday ? " today-highlight" : ""}`}
+        ref={isToday ? (node => {
+          drop(node);
+          if (todayRef && node) todayRef.current = node;
+        }) : drop}
+      >
         {dayDetails && (
           <WorkoutCard
             dayDetails={dayDetails}
