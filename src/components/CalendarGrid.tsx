@@ -3,7 +3,7 @@ import { RacePlan, key } from "../ch/dategrid";
 import { DayCell } from "./DayCell";
 import { WeekSummary } from "./WeekSummary";
 import { DayOfWeekHeader } from "./DayOfWeekHeader";
-import { format, isWithinInterval, isSameDay, startOfDay } from "date-fns";
+import { format, isSameDay, startOfDay } from "date-fns";
 import { getDaysHeader, WeekStartsOn } from "../ch/datecalc";
 import { Units, dayOfWeek, Week, DayDetails } from "types/app";
 
@@ -81,12 +81,7 @@ export const CalendarGrid = ({
   // Find the week containing today's date
   const currentWeekIndex = React.useMemo(() => {
     return racePlan.dateGrid.weeks.findIndex((w) =>
-      w.days.some((d) => 
-        isWithinInterval(today, { 
-          start: startOfDay(d.date), 
-          end: startOfDay(d.date) 
-        })
-      )
+      w.days.some((d) => isSameDay(d.date, today))
     );
   }, [racePlan.dateGrid.weeks, today]);
 
@@ -100,7 +95,7 @@ export const CalendarGrid = ({
     }
   }, [currentWeekIndex]);
 
-  function getWeek(w: Week<DayDetails>) {
+  function getWeek(w: Week<DayDetails>, index: number) {
     const weekDist = calcWeeklyDistance(w);
 
     let isHighestMileage = false;
@@ -115,7 +110,7 @@ export const CalendarGrid = ({
       }
   }
   
-    const isCurrentWeek = w.weekNum === currentWeekIndex;
+    const isCurrentWeek = index === currentWeekIndex;
     
     return (
       <div 
@@ -169,7 +164,7 @@ export const CalendarGrid = ({
   return (
     <div className="calendar-grid">
       {getHeader()}
-      {racePlan.dateGrid.weeks.map((w) => getWeek(w))}
+      {racePlan.dateGrid.weeks.map((w, index) => getWeek(w, index))}
     </div>
   );
 };
