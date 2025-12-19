@@ -44,6 +44,7 @@ const App = () => {
       ? d
       : addWeeks(endOfWeek(new Date(), { weekStartsOn: weekStartsOn }), 20),
   );
+  var [selectedUser, setSelectedUser] = useState<"aaron" | "kristin">("aaron");
 
   useMountEffect(() => {
     initialLoad(selectedPlan, planEndDate, selectedUnits, weekStartsOn);
@@ -167,7 +168,7 @@ const App = () => {
         unitsChangeHandler={onSelectedUnitsChanged}
       />
       <PlanDetailsCard racePlan={racePlan} />
-      <PacesPanel />
+      <PacesPanel selectedUser={selectedUser} onUserChange={setSelectedUser} />
       <div className="second-toolbar">
         <button className="app-button" onClick={downloadIcalHandler}>Download iCal</button>
         <button className="app-button" onClick={downloadCsvHandler}>Download CSV</button>
@@ -184,6 +185,7 @@ const App = () => {
             weekStartsOn={weekStartsOn}
             swapDates={swapDates}
             swapDow={doSwapDow}
+            selectedUser={selectedUser}
           />
         )}
       </div>

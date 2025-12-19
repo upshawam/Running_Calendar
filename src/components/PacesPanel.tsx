@@ -13,10 +13,11 @@ interface PacesHistory {
 
 interface PacesPanelProps {
   className?: string;
+  selectedUser: "aaron" | "kristin";
+  onUserChange: (user: "aaron" | "kristin") => void;
 }
 
-const PacesPanel: React.FC<PacesPanelProps> = ({ className = "" }) => {
-  const [selectedUser, setSelectedUser] = useState<"aaron" | "kristin">("aaron");
+const PacesPanel: React.FC<PacesPanelProps> = ({ className = "", selectedUser, onUserChange }) => {
   const [pacesData, setPacesData] = useState<PaceData | null>(null);
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -104,7 +105,7 @@ const PacesPanel: React.FC<PacesPanelProps> = ({ className = "" }) => {
           <h3 style={{ margin: 0, fontSize: "1.1rem" }}>Training Paces</h3>
           <div style={{ display: "flex", gap: "0.5rem" }}>
             <button
-              onClick={() => setSelectedUser("aaron")}
+              onClick={() => onUserChange("aaron")}
               style={{
                 padding: "0.4rem 0.8rem",
                 fontSize: "0.9rem",
@@ -120,7 +121,7 @@ const PacesPanel: React.FC<PacesPanelProps> = ({ className = "" }) => {
               Aaron
             </button>
             <button
-              onClick={() => setSelectedUser("kristin")}
+              onClick={() => onUserChange("kristin")}
               style={{
                 padding: "0.4rem 0.8rem",
                 fontSize: "0.9rem",

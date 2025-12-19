@@ -293,12 +293,18 @@ svg.drag-handle {
   grid-template-columns: repeat(1, 1fr);
   grid-template-rows: auto;
   row-gap: 0.5em;
+  @media (max-width: 991px) {
+    row-gap: 1.5em;
+  }
 }
 
 .week-grid {
   display: grid;
   @media (min-width: 992px) {
     grid-template-columns: 0.75fr repeat(7, 1fr);
+  }
+  @media (max-width: 991px) {
+    row-gap: 0.25em;
   }
   column-gap: 0.5em;
 }

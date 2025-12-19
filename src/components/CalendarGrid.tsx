@@ -3,7 +3,7 @@ import { RacePlan, key } from "../ch/dategrid";
 import { DayCell } from "./DayCell";
 import { WeekSummary } from "./WeekSummary";
 import { DayOfWeekHeader } from "./DayOfWeekHeader";
-import { format, isSameDay } from "date-fns";
+import { format, isSameDay, startOfWeek, endOfWeek, isWithinInterval } from "date-fns";
 import { getDaysHeader, WeekStartsOn } from "../ch/datecalc";
 import { Units, dayOfWeek, Week, DayDetails } from "types/app";
 
@@ -13,6 +13,7 @@ interface Props {
   weekStartsOn: WeekStartsOn;
   swapDates: (d1: Date, d2: Date) => void;
   swapDow: (dow1: dayOfWeek, dow2: dayOfWeek) => void;
+  selectedUser: "aaron" | "kristin";
 }
 
 function calcWeeklyDistance(w: Week<DayDetails>): number[] {
@@ -66,9 +67,34 @@ export const CalendarGrid = ({
   weekStartsOn,
   swapDates,
   swapDow,
+  selectedUser,
 }: Props) => {
   const today = new Date();
   const todayCellRef = React.useRef<HTMLDivElement | null>(null);
+  const [paceData, setPaceData] = React.useState<any>(null);
+  
+  // Load pace data for selected user
+  React.useEffect(() => {
+    async function loadPaces() {
+      try {
+        const response = await fetch(`${import.meta.env.BASE_URL}data/${selectedUser}_paces.json`);
+        if (response.ok) {
+          const history = await response.json();
+          if (history.length > 0) {
+            setPaceData(history[0].paces);
+          }
+        }
+      } catch (e) {
+        console.error('Failed to load pace data:', e);
+      }
+    }
+    loadPaces();
+  }, [selectedUser]);
+  
+  // Calculate current week boundaries
+  const currentWeekStart = startOfWeek(today, { weekStartsOn });
+  const currentWeekEnd = endOfWeek(today, { weekStartsOn });
+  
   // Callback ref to set todayCellRef
   const setTodayCellRef = (node: HTMLDivElement | null) => {
     todayCellRef.current = node;
@@ -110,6 +136,7 @@ export const CalendarGrid = ({
         />
         {w.days.map((d, _) => {
           const isToday = isSameDay(d.date, today);
+          const isCurrentWeek = isWithinInterval(d.date, { start: currentWeekStart, end: currentWeekEnd });
           return (
             <DayCell
               key={key(d.date)}
@@ -121,6 +148,8 @@ export const CalendarGrid = ({
               hovering={hoveringDow === format(d.date, "EEEE")}
               isToday={isToday}
               todayRef={isToday ? setTodayCellRef : undefined}
+              paceData={paceData}
+              isCurrentWeek={isCurrentWeek}
             />
           );
         })}

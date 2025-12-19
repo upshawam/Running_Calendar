@@ -14,8 +14,12 @@ function renderDayDetails(
   plannedWorkout: PlannedWorkout | undefined,
 ): DayDetails | undefined {
   if (plannedWorkout) {
+    // Filter out rest/cross-train text but keep the day as a valid box
+    const title = plannedWorkout.title.toLowerCase().includes('rest or cross-train') 
+      ? '' 
+      : plannedWorkout.title;
     return {
-      title: plannedWorkout.title,
+      title: title,
       desc: plannedWorkout.description,
       tags: plannedWorkout.tags,
       dist: plannedWorkout.distance,

@@ -14,6 +14,8 @@ interface Props {
   hovering: boolean;
   isToday?: boolean;
   todayRef?: ((node: HTMLDivElement | null) => void) | undefined;
+  paceData?: any;
+  isCurrentWeek?: boolean;
 }
 
 export const DayCell = ({
@@ -25,6 +27,8 @@ export const DayCell = ({
   hovering,
   isToday,
   todayRef,
+  paceData,
+  isCurrentWeek,
 }: Props) => {
   if (isToday) {
     // Debug: log when today cell is detected
@@ -71,6 +75,8 @@ export const DayCell = ({
             date={date}
             units={units}
             swap={swap}
+            paceData={paceData}
+            isCurrentWeek={isCurrentWeek}
           />
         )}
         {!dayDetails && <BlankCard date={date} />}
