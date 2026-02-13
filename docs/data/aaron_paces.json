@@ -1738,5 +1738,34 @@
                 "vo2_percent": "95-100%"
             }
         }
+    },
+    {
+        "date": "2026-02-13T06:29:29.983215",
+        "paces": {
+            "Recovery": {
+                "pace_range": "8:51/mi - \u2026",
+                "vo2_percent": "\u2026-70%"
+            },
+            "Aerobic": {
+                "pace_range": "8:16/mi - 9:41/mi",
+                "vo2_percent": "64-75%"
+            },
+            "Long/Medium long": {
+                "pace_range": "7:56/mi - 8:59/mi",
+                "vo2_percent": "69-78%"
+            },
+            "Marathon": {
+                "pace_range": "7:26/mi - 8:30/mi",
+                "vo2_percent": "73-83%"
+            },
+            "Lactate threshold": {
+                "pace_range": "6:44/mi - 6:54/mi",
+                "vo2_percent": "90-92%"
+            },
+            "VO2max": {
+                "pace_range": "6:12/mi - 6:31/mi",
+                "vo2_percent": "95-100%"
+            }
+        }
     }
 ]
