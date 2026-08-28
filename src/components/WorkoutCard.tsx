@@ -64,6 +64,10 @@ function matchPaceType(title: string, paceData: any): string | null {
   return null;
 }
 
+function isRestDay(dayDetails: DayDetails): boolean {
+  return /^(off day|rest)$/i.test(dayDetails.title);
+}
+
 export const WorkoutCard = ({ dayDetails, date, units, paceData, isCurrentWeek }: Props) => {
   const [{ isDragging }, drag, preview] = useDrag({
     type: ItemTypes.DAY,
@@ -79,17 +83,18 @@ export const WorkoutCard = ({ dayDetails, date, units, paceData, isCurrentWeek }
     },
   });
 
-  const paceInfo = isCurrentWeek ? matchPaceType(dayDetails.title, paceData) : null;
+  const restDay = isRestDay(dayDetails);
+  const paceInfo = !restDay && isCurrentWeek ? matchPaceType(dayDetails.title, paceData) : null;
   
   return (
-    <div ref={preview} className={`workout-card ${isDragging ? "dragging" : ""}`} style={{ display: 'flex', flexDirection: 'column' }}>
+    <div ref={preview} className={`workout-card${restDay ? " rest-day" : ""} ${isDragging ? "dragging" : ""}`} style={{ display: 'flex', flexDirection: 'column' }}>
       <Dateline $date={date} />
       <div className="workout-content" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <div ref={drag}>
           <DragHandle viewBox="0 0 32 36" />
         </div>
         <div style={{ flex: 1 }}>
-          {renderDesc(dayDetails, dayDetails.sourceUnits, units)}
+          {!restDay && renderDesc(dayDetails, dayDetails.sourceUnits, units)}
         </div>
         {paceInfo && (
           <div style={{ 

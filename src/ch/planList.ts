@@ -47,6 +47,7 @@ export const plans: PlanSummary[] = [
   { id: "boston_level_two", name: "Boston Marathon Level 2 Plan", type: "Marathon", coach: "Boston Marathon Training" },
   { id: "boston_level_three", name: "Boston Marathon Level 3 Plan", type: "Marathon", coach: "Boston Marathon Training" },
   { id: "boston_level_four", name: "Boston Marathon Level 4 Plan", type: "Marathon", coach: "Boston Marathon Training" },
+  { id: "nyc_marathon_2026_10_week_custom", name: "NYC Marathon 2026 10-Week Experienced Runner Build", type: "Marathon", coach: "Custom", subcategory: "NYC Marathon 2026" },
   { id: "pfitz_04_multi_4th", name: "Pfitzinger/Douglas: Multiple Marathoning, 4-week schedule", type: "Marathon", coach: "Pfitzinger/Douglas", subcategory: "Multiple Marathoning" },
   { id: "pfitz_06_multi_4th", name: "Pfitzinger/Douglas: Multiple Marathoning, 6-week schedule", type: "Marathon", coach: "Pfitzinger/Douglas", subcategory: "Multiple Marathoning" },
   { id: "pfitz_08_multi_4th", name: "Pfitzinger/Douglas: Multiple Marathoning, 8-week schedule", type: "Marathon", coach: "Pfitzinger/Douglas", subcategory: "Multiple Marathoning" },

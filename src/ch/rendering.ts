@@ -125,6 +125,26 @@ export function renderStr(input: string, from: Units, to: Units): string {
   return handle_conversions(input, from, to);
 }
 
+function hasExplicitDistanceText(title: string): boolean {
+  return /\b(mi|mile|miles|km|kilometer|kilometers)\b/i.test(title) || /\{\d/.test(title);
+}
+
+function prefixDistance(title: string, distance: number[] | number | undefined, from: Units): string {
+  if (hasExplicitDistanceText(title)) {
+    return title;
+  }
+
+  if (distance === undefined || (Array.isArray(distance) ? distance.length === 0 : distance === 0)) {
+    if (/^(off day|rest)$/i.test(title)) {
+      return `0 ${from} ${title}`;
+    }
+    return title;
+  }
+
+  const distValue = Array.isArray(distance) ? distance : [distance];
+  return `${renderDist(distValue, from, from)} ${title}`.trim();
+}
+
 export function render(
   input: DayDetails,
   from: Units,
@@ -132,6 +152,7 @@ export function render(
 ): [string, string] {
   // [title, desc]
   let title = handle_conversions(input.title, from, to);
+  title = prefixDistance(title, input.dist, from);
   let desc = handle_conversions(input.desc, from, to);
   return [title, desc];
 }

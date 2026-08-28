@@ -1,0 +1,189 @@
+id: nyc_marathon_2026_10_week_custom
+name: NYC Marathon 2026 10-Week Experienced Runner Build
+description: 10-week marathon build for NYC Marathon 2026, starting from an already completed 24-mile week and peaking at 56-58 miles before a conservative sub-4:00 race plan. Built for an experienced runner with prior 50K and 50-mile history.
+units: mi
+source: /Running_Calendar/plans/yaml/nyc_marathon_2026_10_week_custom.yaml
+type: Marathon
+schedule:
+  - description: Week 1 already completed. Treat this as the 24-mile opening week that precedes the app start.
+    workouts:
+      - title: Off Day
+      - title: Easy aerobic + strides
+        description: Easy running + 6 x 20 sec relaxed strides.
+        distance: 6
+      - title: Off Day
+      - title: Easy aerobic
+        description: Easy aerobic running.
+        distance: 6
+      - title: Off Day
+      - title: Steady aerobic finish
+        description: Easy running with the last 2 miles steady around 9:20-9:40/mi.
+        distance: 6
+      - title: Easy aerobic
+        description: Controlled aerobic running to round out the already completed 24-mile week.
+        distance: 6
+  - description: Dates: 2026-08-31 to 2026-09-06. Target mileage: 32.
+    workouts:
+      - title: Off Day
+      - title: Easy aerobic + strides
+        description: Easy running + 6 x 20 sec relaxed strides.
+        distance: 7
+      - title: Off Day
+      - title: Easy aerobic
+        description: Easy/aerobic running.
+        distance: 7
+      - title: Off Day
+      - title: Easy aerobic + steady finish
+        description: Easy; last 2 mi steady around 9:20-9:40/mi.
+        distance: 5
+      - title: Long run
+        description: Easy and controlled. Do not chase pace.
+        distance: 13
+  - description: Dates: 2026-09-07 to 2026-09-13. Target mileage: 40. Checkpoint 1: 3 x 1 mile at about 8:30/mi in control.
+    workouts:
+      - title: Recovery
+        description: Very easy recovery running.
+        distance: 5
+      - title: Threshold re-entry
+        description: 2 mi easy, 3 x 1 mi at 8:25-8:45/mi with 2-3 min easy recovery, cooldown.
+        distance: 8
+      - title: Off Day
+      - title: Easy aerobic
+        description: Easy aerobic running.
+        distance: 7
+      - title: Off Day
+      - title: Recovery + strides
+        description: Recovery + relaxed strides.
+        distance: 4
+      - title: Long run
+        description: Easy; practice fueling.
+        distance: 16
+  - description: Dates: 2026-09-14 to 2026-09-20. Target mileage: 47. Checkpoint 2: 4 miles at marathon pace should feel controlled.
+    workouts:
+      - title: Recovery
+        description: Easy recovery.
+        distance: 5
+      - title: Threshold
+        description: 2 mi easy, 4 mi threshold at 8:30-8:45/mi, 3 mi easy/cooldown.
+        distance: 9
+      - title: Off Day
+      - title: Easy aerobic
+        description: Easy/aerobic.
+        distance: 8
+      - title: Off Day
+      - title: Marathon pace introduction
+        description: 2 mi easy, 4 mi at 9:05-9:10/mi, 1 mi easy.
+        distance: 7
+      - title: Long run
+        description: Easy. Optional final 3 mi around 9:30-9:45/mi if feeling excellent.
+        distance: 18
+  - description: Dates: 2026-09-21 to 2026-09-27. Target mileage: 53. Checkpoint 3: 20-mile durability test.
+    workouts:
+      - title: Recovery
+        description: Easy recovery.
+        distance: 6
+      - title: Threshold intervals
+        description: 2 mi easy, 5 x 1 mi at 8:20-8:40/mi with 2 min easy recovery, cooldown.
+        distance: 10
+      - title: Off Day
+      - title: Easy aerobic
+        description: Easy/aerobic.
+        distance: 9
+      - title: Off Day
+      - title: Marathon pace
+        description: 2 mi easy, 5 mi at 9:05-9:10/mi, 1 mi easy.
+        distance: 8
+      - title: Long run with steady finish
+        description: First 14 mi easy; final 6 mi around 9:20-9:40/mi. Do not force marathon pace.
+        distance: 20
+  - description: Dates: 2026-09-28 to 2026-10-04. Target mileage: 56-58. Peak week. Use 56 if fatigue is building, 58 only if recovery is excellent. Checkpoint 4: key 6-mile marathon pace test.
+    workouts:
+      - title: Recovery
+        description: Easy recovery.
+        distance: 6
+      - title: Marathon-specific threshold
+        description: 2 mi easy, 3 x 2 mi at 8:40-8:55/mi with 3 min easy recovery, cooldown.
+        distance: 11
+      - title: Off Day
+      - title: Easy aerobic
+        description: Easy/aerobic. Add 1-2 easy miles here if choosing the 58-mile version.
+        distance: [10, 12]
+      - title: Off Day
+      - title: Key marathon pace test
+        description: 2 mi easy, 6 mi at 9:05-9:10/mi, 2 mi easy.
+        distance: 10
+      - title: Long run
+        description: Easy. Optional final 4 mi at marathon effort only if exceptionally fresh.
+        distance: 19
+  - description: Dates: 2026-10-05 to 2026-10-11. Target mileage: 49. Checkpoint 5: final 20-mile progression.
+    workouts:
+      - title: Recovery
+        description: Easy recovery.
+        distance: 5
+      - title: Threshold + speed
+        description: 2 mi easy, 5 x 1 mi at 8:25-8:45/mi with easy recovery, cooldown.
+        distance: 9
+      - title: Off Day
+      - title: Easy aerobic
+        description: Easy aerobic.
+        distance: 8
+      - title: Off Day
+      - title: Easy aerobic + strides
+        description: Easy + relaxed strides.
+        distance: 7
+      - title: Final marathon-specific progression
+        description: Miles 1-8 at 10:15-10:30; miles 9-14 at 9:45-10:00; miles 15-20 at 9:10-9:20 if controlled. Do not force the final segment.
+        distance: 20
+  - description: Dates: 2026-10-12 to 2026-10-18. Target mileage: 40-42. Checkpoint 6: taper marathon pace check.
+    workouts:
+      - title: Recovery
+        description: Easy recovery.
+        distance: 4
+      - title: Marathon pace
+        description: 2 mi easy, 5 mi at 9:05-9:10/mi, 2 mi easy.
+        distance: 9
+      - title: Off Day
+      - title: Easy aerobic
+        description: Easy aerobic.
+        distance: 7
+      - title: Off Day
+      - title: Easy aerobic + strides
+        description: Easy + relaxed strides.
+        distance: 6
+      - title: Long run
+        description: Easy and relaxed. Practice fueling.
+        distance: 16
+  - description: Dates: 2026-10-19 to 2026-10-25. Target mileage: 29-31. Preserve fitness and shed fatigue.
+    workouts:
+      - title: Off Day
+      - title: Marathon pace intervals
+        description: 2 mi easy, 4 x 1 mi at 9:05-9:10/mi with 2 min easy recovery, cooldown.
+        distance: 8
+      - title: Off Day
+      - title: Easy aerobic
+        description: Easy aerobic.
+        distance: 7
+      - title: Off Day
+      - title: Easy aerobic + strides
+        description: Easy + 4 x 20 sec relaxed strides.
+        distance: 4
+      - title: Easy long run
+        description: Easy and relaxed. Extend to 12 only if recovery is excellent.
+        distance: 10
+  - description: Race week. Target mileage is approximate including the marathon.
+    workouts:
+      - title: Off Day
+      - title: Easy aerobic + strides
+        description: Easy + 4 x 20 sec relaxed strides.
+        distance: 5
+      - title: Off Day
+      - title: Marathon pace tune-up
+        description: 2 mi easy + 2 mi at marathon pace.
+        distance: 4
+      - title: Off Day
+      - title: Race shakeout
+        description: Very easy + 3 x 15 sec relaxed strides.
+        distance: [2, 3]
+      - title: NYC Marathon
+        description: Target sub-4 with conservative early pacing.
+        distance: 26.2
