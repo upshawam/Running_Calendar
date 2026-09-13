@@ -14,7 +14,7 @@ interface PacesHistory {
 interface PacesPanelProps {
   className?: string;
   selectedUser: "aaron" | "kristin";
-  onUserChange: (user: "aaron" | "kristin") => void;
+  onUserChange: (user: "aaron" | "kristin") => void | Promise<void>;
 }
 
 const PacesPanel: React.FC<PacesPanelProps> = ({ className = "", selectedUser, onUserChange }) => {

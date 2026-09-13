@@ -24,6 +24,10 @@ import { Units, PlanSummary, dayOfWeek } from "types/app";
 import { getLocaleUnits } from "./ch/localize";
 
 const App = () => {
+  type AppUser = "aaron" | "kristin";
+  type PlanIdByUser = Record<AppUser, string>;
+  const userPlanStorageKey = "selectedPlanByUser";
+
   const [{ u, p, d, s }, setq] = useQueryParams({
     u: StringParam,
     p: StringParam,
@@ -33,7 +37,51 @@ const App = () => {
   const [selectedUnits, setSelectedUnits] = useState<Units>(
     u === "mi" || u === "km" ? u : getLocaleUnits(),
   );
-  var [selectedPlan, setSelectedPlan] = useState(repo.find(p || ""));
+  const fallbackPlan = repo.find(p || "");
+
+  const loadSelectedPlanByUser = (fallback: PlanSummary): Record<AppUser, PlanSummary> => {
+    const fallbackByUser: Record<AppUser, PlanSummary> = {
+      aaron: fallback,
+      kristin: fallback,
+    };
+
+    if (typeof window === "undefined") {
+      return fallbackByUser;
+    }
+
+    try {
+      const raw = window.localStorage.getItem(userPlanStorageKey);
+      if (!raw) {
+        return fallbackByUser;
+      }
+      const parsed = JSON.parse(raw) as Partial<PlanIdByUser>;
+      return {
+        aaron: parsed.aaron ? repo.find(parsed.aaron) : fallback,
+        kristin: parsed.kristin ? repo.find(parsed.kristin) : fallback,
+      };
+    } catch {
+      return fallbackByUser;
+    }
+  };
+
+  const saveSelectedPlanByUser = (plansByUser: Record<AppUser, PlanSummary>) => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    const planIds: PlanIdByUser = {
+      aaron: plansByUser.aaron.id,
+      kristin: plansByUser.kristin.id,
+    };
+    window.localStorage.setItem(userPlanStorageKey, JSON.stringify(planIds));
+  };
+
+  const initialSelectedPlanByUser = loadSelectedPlanByUser(fallbackPlan);
+  if (p) {
+    initialSelectedPlanByUser.aaron = repo.find(p);
+  }
+
+  var [selectedPlan, setSelectedPlan] = useState(initialSelectedPlanByUser.aaron);
+  var [selectedPlanByUser, setSelectedPlanByUser] = useState<Record<AppUser, PlanSummary>>(initialSelectedPlanByUser);
   var [racePlan, setRacePlan] = useState<RacePlan | undefined>(undefined);
   var [undoHistory, setUndoHistory] = useState([] as RacePlan[]);
   var [weekStartsOn, setWeekStartsOn] = useState<WeekStartsOn>(
@@ -44,7 +92,7 @@ const App = () => {
       ? d
       : addWeeks(endOfWeek(new Date(), { weekStartsOn: weekStartsOn }), 20),
   );
-  var [selectedUser, setSelectedUser] = useState<"aaron" | "kristin">("aaron");
+  var [selectedUser, setSelectedUser] = useState<AppUser>("aaron");
 
   useMountEffect(() => {
     initialLoad(selectedPlan, planEndDate, selectedUnits, weekStartsOn);
@@ -87,9 +135,27 @@ const App = () => {
   const onSelectedPlanChange = async (plan: PlanSummary) => {
     const racePlan = build(await repo.fetch(plan), planEndDate, weekStartsOn);
     setSelectedPlan(plan);
+    setSelectedPlanByUser((prev) => {
+      const next = {
+        ...prev,
+        [selectedUser]: plan,
+      };
+      saveSelectedPlanByUser(next);
+      return next;
+    });
     setRacePlan(racePlan);
     setUndoHistory([racePlan]);
     setq(getParams(selectedUnits, plan, planEndDate, weekStartsOn));
+  };
+
+  const onSelectedUserChange = async (user: AppUser) => {
+    const usersPlan = selectedPlanByUser[user] || selectedPlan;
+    const racePlan = build(await repo.fetch(usersPlan), planEndDate, weekStartsOn);
+    setSelectedUser(user);
+    setSelectedPlan(usersPlan);
+    setRacePlan(racePlan);
+    setUndoHistory([racePlan]);
+    setq(getParams(selectedUnits, usersPlan, planEndDate, weekStartsOn));
   };
 
   const onSelectedEndDateChange = async (date: Date) => {
@@ -168,7 +234,7 @@ const App = () => {
         unitsChangeHandler={onSelectedUnitsChanged}
       />
       <PlanDetailsCard racePlan={racePlan} />
-      <PacesPanel selectedUser={selectedUser} onUserChange={setSelectedUser} />
+      <PacesPanel selectedUser={selectedUser} onUserChange={onSelectedUserChange} />
       <div className="second-toolbar">
         <button className="app-button" onClick={downloadIcalHandler}>Download iCal</button>
         <button className="app-button" onClick={downloadCsvHandler}>Download CSV</button>
